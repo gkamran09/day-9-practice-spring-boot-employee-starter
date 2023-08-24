@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -121,6 +122,22 @@ public class EmployeeServiceTest {
         // Then
         assertEquals(expectedEmployees.size(), employees.size());
         assertEquals(expectedEmployees.get(0).getName(), employees.get(0).getName());
+    }
+
+    @Test
+    void should_return_list_of_all_employees_when_list_all_employees() {
+        // Given
+        List<Employee> expectedEmployees = new ArrayList<>();
+        expectedEmployees.add(new Employee(1L, "Alice", 24, "Female", 9000));
+        expectedEmployees.add(new Employee(2L, "Bob", 25, "Male", 8500));
+
+        when(employeeRepository.findAll()).thenReturn(expectedEmployees);
+
+        // When
+        List<Employee> actualEmployees = employeeService.findAll();
+
+        // Then
+        assertEquals(expectedEmployees, actualEmployees);
     }
 
 }
