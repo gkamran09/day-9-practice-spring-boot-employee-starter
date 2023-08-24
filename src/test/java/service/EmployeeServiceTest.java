@@ -10,7 +10,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -93,6 +98,29 @@ public class EmployeeServiceTest {
 
         // Check the exception message
         assertEquals("Employee must be 18-65", employeeCreateException.getMessage());
+    }
+
+    @Test
+    void should_return_employees_by_page_when_get_by_page_given_page_number_and_page_size() {
+        // Given
+        int pageNumber = 2;
+        int pageSize = 3;
+
+        List<Employee> expectedEmployees = Arrays.asList(
+                new Employee(3L, "Alice", 30, "female", 99239),
+                new Employee(4L, "Lucy", 30, "female", 99239),
+                new Employee(5L, "Linne", 30, "female", 99239)
+        );
+
+        when(employeeRepository.findAll(PageRequest.of(pageNumber, pageSize)))
+                .thenReturn(new PageImpl<>(expectedEmployees));
+
+        // When
+        List<Employee> employees = employeeService.findByPage(pageNumber, pageSize);
+
+        // Then
+        assertEquals(expectedEmployees.size(), employees.size());
+        assertEquals(expectedEmployees.get(0).getName(), employees.get(0).getName());
     }
 
 }
