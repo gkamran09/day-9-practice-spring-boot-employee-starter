@@ -105,22 +105,20 @@ class CompanyApiTest {
 
     @Test
     void should_find_companies_by_page() throws Exception {
-        Company company1 = getCompany1();
-        Company company2 = getCompany2();
         Company company3 = getCompany3();
-        inMemoryCompanyRepository.insert(company1);
-        inMemoryCompanyRepository.insert(company2);
+        Company savedCompany1 = companyJpaRepository.save(getCompany1());
+        Company savedCompany2 =  companyJpaRepository.save(getCompany2());
         inMemoryCompanyRepository.insert(company3);
 
         mockMvc.perform(get("/companies")
-                        .param("pageNumber", "1")
+                        .param("pageNumber", "0")
                         .param("pageSize", "2"))
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(1L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(company1.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2L))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(company2.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].id").value(savedCompany1.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value(savedCompany1.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(savedCompany2.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value(savedCompany2.getName()))
         ;
     }
 
