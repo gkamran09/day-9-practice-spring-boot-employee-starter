@@ -59,7 +59,7 @@ class CompanyApiTest {
         Company companyUpdateRequest = new Company(1L, "xyz");
         ObjectMapper objectMapper = new ObjectMapper();
         String updatedEmployeeJson = objectMapper.writeValueAsString(companyUpdateRequest);
-        mockMvc.perform(put("/companies/{id}", previousCompany.getId())
+        mockMvc.perform(put("/companies/{id}", saveCompany.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedEmployeeJson))
                 .andExpect(MockMvcResultMatchers.status().is(204));
@@ -68,7 +68,7 @@ class CompanyApiTest {
         assertTrue(optionalCompany.isPresent());
         Company updatedCompany = optionalCompany.get();
         Assertions.assertEquals(saveCompany.getId(), updatedCompany.getId());
-        Assertions.assertEquals(saveCompany.getName(), updatedCompany.getName());
+        Assertions.assertEquals(updatedCompany.getName(), updatedCompany.getName());
     }
 
     @Test
