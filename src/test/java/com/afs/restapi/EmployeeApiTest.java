@@ -98,11 +98,11 @@ class EmployeeApiTest {
     @Test
     void should_find_employee_by_id() throws Exception {
         Employee employee = getEmployeeBob();
-        inMemoryEmployeeRepository.insert(employee);
+        Employee saveEmployee = employeeJpaRepository.save(employee);
 
-        mockMvc.perform(get("/employees/{id}", 1))
+        mockMvc.perform(get("/employees/{id}", saveEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1L))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(saveEmployee.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(employee.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(employee.getAge()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value(employee.getGender()))
