@@ -23,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmployeeServiceTest {
@@ -187,6 +188,18 @@ public class EmployeeServiceTest {
         assertEquals(25, returnedEmployee.getAge());
         assertEquals("Female", returnedEmployee.getGender());
         assertEquals(60000, returnedEmployee.getSalary());
+    }
+
+    @Test
+    void should_remove_employee_when_delete_given_valid_employee_id() {
+        // Given
+        Long employeeId = 1L;
+
+        // When
+        employeeService.delete(employeeId);
+
+        // Then
+        verify(employeeRepository).deleteById(employeeId);
     }
 
 }
