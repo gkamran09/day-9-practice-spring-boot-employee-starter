@@ -159,4 +159,34 @@ public class EmployeeServiceTest {
         assertEquals(expectedEmployees.get(0).getName(), actualEmployees.get(0).getName());
     }
 
+    @Test
+    void should_create_employee_when_create_given_valid_employee() {
+        // Given
+        Employee employeeToCreate = new Employee();
+        employeeToCreate.setName("Alice");
+        employeeToCreate.setAge(25);
+        employeeToCreate.setGender("Female");
+        employeeToCreate.setSalary(60000);
+
+        Employee savedEmployee = new Employee();
+        savedEmployee.setId(1L);
+        savedEmployee.setName("Alice");
+        savedEmployee.setAge(25);
+        savedEmployee.setGender("Female");
+        savedEmployee.setSalary(60000);
+
+        when(employeeRepository.save(employeeToCreate)).thenReturn(savedEmployee);
+
+        // When
+        Employee returnedEmployee = employeeService.create(employeeToCreate);
+
+        // Then
+        assertNotNull(returnedEmployee);
+        assertEquals(savedEmployee.getId(), returnedEmployee.getId());
+        assertEquals("Alice", returnedEmployee.getName());
+        assertEquals(25, returnedEmployee.getAge());
+        assertEquals("Female", returnedEmployee.getGender());
+        assertEquals(60000, returnedEmployee.getSalary());
+    }
+
 }
