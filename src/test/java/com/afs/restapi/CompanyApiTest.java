@@ -32,12 +32,6 @@ class CompanyApiTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private InMemoryCompanyRepository inMemoryCompanyRepository;
-
-    @Autowired
-    private InMemoryEmployeeRepository inMemoryEmployeeRepository;
-
-    @Autowired
     private CompanyJpaRepository companyJpaRepository;
 
     @Autowired
@@ -45,8 +39,6 @@ class CompanyApiTest {
 
     @BeforeEach
     void setUp() {
-        inMemoryCompanyRepository.clearAll();
-        inMemoryEmployeeRepository.clearAll();
         companyJpaRepository.deleteAll();
         employeeJpaRepository.deleteAll();
     }
@@ -79,7 +71,7 @@ class CompanyApiTest {
         mockMvc.perform(delete("/companies/{id}", savedCompany.getId()))
                 .andExpect(MockMvcResultMatchers.status().is(204));
 
-        assertTrue(inMemoryCompanyRepository.findById(savedCompany.getId()).isEmpty());
+        assertTrue(companyJpaRepository.findById(savedCompany.getId()).isEmpty());
     }
 
     @Test
@@ -113,7 +105,7 @@ class CompanyApiTest {
         Company company3 = getCompany3();
         Company savedCompany1 = companyJpaRepository.save(getCompany1());
         Company savedCompany2 =  companyJpaRepository.save(getCompany2());
-        inMemoryCompanyRepository.insert(company3);
+        companyJpaRepository.save(company3);
 
         mockMvc.perform(get("/companies")
                         .param("pageNumber", "0")
