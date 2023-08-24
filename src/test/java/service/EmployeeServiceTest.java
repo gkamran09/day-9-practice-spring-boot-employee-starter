@@ -7,6 +7,7 @@ import com.afs.restapi.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -200,6 +202,44 @@ public class EmployeeServiceTest {
 
         // Then
         verify(employeeRepository).deleteById(employeeId);
+    }
+
+    @Test
+    void should_update_employee_when_update_given_valid_employee() {
+        // Given
+        Long existingEmployeeId = 1L;
+
+        Employee existingEmployee = new Employee();
+        existingEmployee.setId(existingEmployeeId);
+        existingEmployee.setName("Alice");
+        existingEmployee.setAge(24);
+        existingEmployee.setGender("Female");
+        existingEmployee.setSalary(9000);
+
+        Employee updatedEmployee = new Employee();
+        updatedEmployee.setId(existingEmployeeId);
+        updatedEmployee.setName("Alice");
+        updatedEmployee.setAge(25);
+        updatedEmployee.setGender("Female");
+        updatedEmployee.setSalary(9500);
+
+        when(employeeRepository.findById(existingEmployeeId)).thenReturn(Optional.of(existingEmployee));
+
+        ArgumentCaptor<Employee> employeeCaptor = ArgumentCaptor.forClass(Employee.class);
+
+        // When
+        employeeService.update(existingEmployeeId, updatedEmployee);
+
+        // Then
+        verify(employeeRepository).findById(existingEmployeeId);
+        verify(employeeRepository).save(employeeCaptor.capture());
+        Employee savedEmployee = employeeCaptor.getValue();
+
+        assertEquals(updatedEmployee.getName(), savedEmployee.getName());
+        assertEquals(updatedEmployee.getAge(), savedEmployee.getAge());
+        assertEquals(updatedEmployee.getGender(), savedEmployee.getGender());
+        assertEquals(updatedEmployee.getSalary(), savedEmployee.getSalary());
+        assertEquals(existingEmployeeId, savedEmployee.getId());
     }
 
 }
