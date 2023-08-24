@@ -35,6 +35,7 @@ public class EmployeeService {
         if (employee.getAge() != null) {
             toBeUpdatedEmployee.setAge(employee.getAge());
         }
+        employeeJpaRepository.save(toBeUpdatedEmployee);
     }
 
     public List<Employee> findAllByGender(String gender) {
