@@ -4,9 +4,7 @@ import com.afs.restapi.entity.Company;
 import com.afs.restapi.exception.CompanyNotFoundException;
 import com.afs.restapi.repository.CompanyJpaRepository;
 import com.afs.restapi.repository.EmployeeJpaRepository;
-import com.afs.restapi.repository.InMemoryCompanyRepository;
 import com.afs.restapi.entity.Employee;
-import com.afs.restapi.repository.InMemoryEmployeeRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
