@@ -1,7 +1,7 @@
 package service;
 
 import com.afs.restapi.entity.Employee;
-import com.afs.restapi.exception.EmployeeNotFoundException;
+import com.afs.restapi.exception.EmployeeCreateException;
 import com.afs.restapi.repository.EmployeeJpaRepository;
 import com.afs.restapi.service.EmployeeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,15 +10,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.any;
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -71,4 +66,19 @@ public class EmployeeServiceTest {
         assertEquals("Female",savedEmployee.getGender());
         assertEquals(5000,savedEmployee.getSalary());
     }
+
+    @Test
+    void should_throw_exception_when_create_given_employee_service_and_employee_age_less_than_18() {
+        // Given
+        Employee employee = new Employee(null, "Lucy", 17, "Female", 5999);
+
+        // When and Then
+        EmployeeCreateException exception = assertThrows(EmployeeCreateException.class, () -> {
+            employeeService.create(employee);
+        });
+
+        // Then
+        assertEquals("Employee must be 18-65", exception.getMessage());
+    }
+
 }
